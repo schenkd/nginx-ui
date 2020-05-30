@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
+
+textarea {
+    margin: 0;
+    border-radius: 0;
+}
+
+.code {
+    font-size: 17px;
+    font-weight: 200;
+    font-family: 'Source Code Pro', monospace;
+}
+
+#main-container {
+    margin-top: 5em;
+}

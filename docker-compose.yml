@@ -1,0 +1,21 @@
+version: '3'
+services:
+  nginx-ui:
+    container_name: nginx-ui
+    build: .
+    image: nginx-ui:latest
+    ports:
+      - 8080:8080
+    volumes:
+      - nginx:/etc/nginx
+
+  nginx:
+    container_name: nginx
+    image: nginx:1.18.0-alpine
+    ports:
+      - 80:80
+    volumes:
+      - nginx:/etc/nginx
+
+volumes:
+  nginx:

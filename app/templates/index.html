@@ -1,20 +1,87 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <meta charset="utf-8">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
         <title>Nginx UI</title>
+        <link rel="icon" type="image/png" href="{{ url_for('static', filename='nginx.ico') }}" sizes="48x48">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic/semantic.min.css') }}">
-        <script
-          src="https://code.jquery.com/jquery-3.5.0.slim.min.js"
-          integrity="sha256-MlusDLJIP1GRgLrOflUQtshyP0TwT/RHXsI1wWGnQhs="
-          crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+        {{ moment.include_moment() }}
         <script src="{{ url_for('static', filename='semantic/semantic.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='custom.min.js') }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='custom.css') }}">
     </head>
     <body>
-        <p>Test</p>
+
+        <div class="ui fixed inverted menu">
+            <!-- Menu -->
+            <div class="ui container">
+
+                <a class="header item" href="/">
+                    <img class="logo" src="{{ url_for('static', filename='nginx.png') }}">
+                    Nginx UI
+                </a>
+
+            </div>
+        </div>
+
+        <div class="ui grid container" id="main-container">
+
+            <div class="four column row">
+                <!-- Navigation -->
+
+                <div class="column">
+
+                    <div class="ui fluid labeled icon dropdown button" id="edit_config">
+                        <i class="pencil alternate icon"></i>
+                        <span class="text">Edit Config</span>
+                        <div class="menu">
+                            {% for name in config %}
+                            <div class="config item">{{ name }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="column">
+
+                    <button class="ui fluid labeled icon button" id="domains">
+                      <i class="th large icon"></i>
+                      Sub-/Domain
+                    </button>
+
+                </div>
+
+                <div class="column">
+
+                    <button class="ui fluid labeled icon disabled button">
+                      <i class="th large icon"></i>
+                      Endpoint
+                    </button>
+
+                </div>
+
+                <div class="column">
+
+                    <button class="ui fluid labeled icon disabled button">
+                      <i class="wrench icon"></i>
+                      Settings
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="row" id="content">
+                <!-- Content -->
+            </div>
+
+        </div>
+
     </body>
 </html>

@@ -1,0 +1,22 @@
+<div class="column">
+
+    <div class="ui form">
+
+        <div class="field">
+            <label><h1>{{ name }}</h1></label>
+            <div class="ui basic segment">
+                <div class="ui inverted dimmer" id="dimmer">
+                    <div class="ui huge loader"></div>
+                </div>
+                <textarea class="code" rows="25" id="file-content" autofocus>{{ file }}</textarea>
+            </div>
+        </div>
+
+        <button class="ui right floated labeled icon button" onclick="update_config('{{ name }}')" tabindex="0">
+            <i class="play icon"></i>
+            Apply
+        </button>
+
+    </div>
+
+</div>

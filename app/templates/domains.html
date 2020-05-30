@@ -1,0 +1,57 @@
+<div class="sixteen wide column">
+    <div class="ui basic segment">
+
+        <div class="ui right attached rail">
+            <div class="ui basic segment">
+                {% if sites_available %}
+                <div class="five wide right floated column">
+
+                    <div class="ui relaxed divided large list">
+                        <label><b>Sub-/Domain</b></label>
+
+                        {% for domain in sites_available %}
+                        <div class="item">
+                            <i class="large circle middle aligned {% if domain['name'] in sites_enabled %}green{% else %}outline grey{% endif %} icon"></i>
+                            <div class="content">
+                                <a class="header" onclick="fetch_domain('{{ domain['name'] }}')">{{ domain['name'] }}</a>
+                                <div class="description">Updated {{ moment(domain['time']).fromNow() }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <script>flask_moment_render_all();</script>
+                    </div>
+
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="ui grid">
+
+            <div class="row">
+
+                <div class="six wide column">
+
+                    <div class="ui action fluid input">
+                        <input type="text" placeholder="example.com" id="add_domain">
+                        <button class="ui button" onclick="add_domain()" tabindex="0">
+                            Add
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="column" id="domain">
+                    <!-- file content -->
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
