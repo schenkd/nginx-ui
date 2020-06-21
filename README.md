@@ -1,5 +1,7 @@
 # nginx ui
 
+![Image of Nginx UI](https://i.ibb.co/sj8pwCQ/Bildschirmfoto-2020-06-20-um-18-40-27.png)
+
 We use nginx in our company lab environment. It often happens that my
 colleagues have developed an application that is now deployed in our Stage
 or Prod environment. To make this application accessible nginx has to be
@@ -27,4 +29,3 @@ services:
     volumes:
       - nginx:/etc/nginx
 ```
-
