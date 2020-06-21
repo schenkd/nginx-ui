@@ -26,60 +26,36 @@
                     Nginx UI
                 </a>
 
+                <div class="ui dropdown item" id="edit_config">
+                    Main Config
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        {% for name in config %}
+                        <div class="config item">{{ name }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <a class="item" id="domains">
+                    Domains
+                </a>
+
+                <div class="mobile hidden right item">
+                    <div class="ui action input">
+                        <input type="text" placeholder="example.com" id="add_domain">
+                        <button class="ui green button" onclick="add_domain()" tabindex="0">
+                            Add
+                        </button>
+                    </div>
+                </div>
+
             </div>
+
         </div>
 
-        <div class="ui grid container" id="main-container">
+        <div class="ui stackable grid container" id="main-container">
 
-            <div class="four column row">
-                <!-- Navigation -->
-
-                <div class="column">
-
-                    <div class="ui fluid labeled icon dropdown button" id="edit_config">
-                        <i class="pencil alternate icon"></i>
-                        <span class="text">Edit Config</span>
-                        <div class="menu">
-                            {% for name in config %}
-                            <div class="config item">{{ name }}</div>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="column">
-
-                    <button class="ui fluid labeled icon button" id="domains">
-                      <i class="th large icon"></i>
-                      Sub-/Domain
-                    </button>
-
-                </div>
-
-                <div class="column">
-
-                    <button class="ui fluid labeled icon disabled button">
-                      <i class="th large icon"></i>
-                      Endpoint
-                    </button>
-
-                </div>
-
-                <div class="column">
-
-                    <button class="ui fluid labeled icon disabled button">
-                      <i class="wrench icon"></i>
-                      Settings
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div class="row" id="content">
-                <!-- Content -->
-            </div>
+            <div class="row" id="content"><!-- Content --></div>
 
         </div>
 

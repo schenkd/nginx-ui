@@ -4,37 +4,30 @@ $(document).ready(function() {
     $('.config.item').click(function() {
         var name = $(this).html();
         load_config(name);
-
-        $('.green.highlighted').removeClass('green highlighted');
-        $('#edit_config').addClass('green highlighted');
     });
 
-    $('#domains').click(function() {
-        $.when(load_domains()).then(function() {
-            $('.green.highlighted').removeClass('green highlighted');
-            $('#domains').addClass('green highlighted');
-        });
+    $('#domains').click(function() { load_domains() });
 
-    });
+    load_domains();
 
 });
 
 function load_domains() {
-    fetch_html('api/domains');
+    $.when(fetch_html('api/domains')).then(function() {
+        $('#domain').hide();
+        $('#domain_cards').fadeIn();
+    });
 }
 
 function add_domain() {
     var name = $('#add_domain').val();
+    $('#add_domain').val('');
 
     $.ajax({
         type: 'POST',
         url: '/api/domain/' + name,
         statusCode: {
-            201: function() {
-                $.when(load_domains()).then(function() {
-                    fetch_domain(name);
-                });
-            }
+            201: function() { fetch_domain(name) }
         }
     });
 
@@ -51,11 +44,7 @@ function enable_domain(name, enable) {
             enable: enable
         }),
         statusCode: {
-            200: function() {
-                $.when(load_domains()).then(function() {
-                    fetch_domain(name);
-                });
-            }
+            200: function() { fetch_domain(name); }
         }
     });
 
@@ -74,20 +63,7 @@ function update_domain(name) {
             file: _file
         }),
         statusCode: {
-            200: function() {
-
-                setTimeout(function(){
-
-                    $.when(load_domains()).then(function() {
-
-                        setTimeout(function() {
-                            fetch_domain(name);
-                        }, 50);
-
-                    });
-                }, 450);
-
-            }
+            200: function() { setTimeout(function(){ fetch_domain(name) }, 400) }
         }
     });
 
@@ -98,7 +74,8 @@ function fetch_domain(name) {
     fetch('api/domain/' + name)
     .then(function(response) {
         response.text().then(function(text) {
-            $('#domain').html(text);
+            $('#domain').html(text).fadeIn();
+            $('#domain_cards').hide();
         });
     })
     .catch(function(error) {

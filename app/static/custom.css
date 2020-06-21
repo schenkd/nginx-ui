@@ -14,3 +14,17 @@ textarea {
 #main-container {
     margin-top: 5em;
 }
+#domain {
+    display: none;
+}
+
+@media only screen and (max-width: 666px) {
+  [class*="mobile hidden"],
+  [class*="tablet only"]:not(.mobile),
+  [class*="computer only"]:not(.mobile),
+  [class*="large monitor only"]:not(.mobile),
+  [class*="widescreen monitor only"]:not(.mobile),
+  [class*="or lower hidden"] {
+    display: none !important;
+  }
+}
