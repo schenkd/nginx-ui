@@ -1,5 +1,7 @@
 # nginx ui
 
+![Image of Nginx UI](https://i.ibb.co/XXcfsDp/Bildschirmfoto-2020-06-20-um-18-40-27.png)
+
 We use nginx in our company lab environment. It often happens that my
 colleagues have developed an application that is now deployed in our Stage
 or Prod environment. To make this application accessible nginx has to be
@@ -28,3 +30,16 @@ services:
       - nginx:/etc/nginx
 ```
 
+## UI
+
+![Image of Nginx UI](https://i.ibb.co/qNgBRrt/Bildschirmfoto-2020-06-21-um-10-01-46.png)
+
+With the menu item Main Config the Nginx specific configuration files
+can be extracted and updated. These are dynamically read from the Nginx
+directory. If a file has been added manually, it is immediately integrated
+into the Nginx UI Main Config menu item.
+
+![Image of Nginx UI](https://i.ibb.co/j85XKM6/Bildschirmfoto-2020-06-21-um-10-01-58.png)
+
+Adding a domain opens an exclusive editing window for the configuration
+file. This can be applied, deleted and enabled/disabled.
