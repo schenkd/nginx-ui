@@ -42,7 +42,7 @@ def post_config(name: str):
     with io.open(os.path.join(nginx_path, name), 'w') as f:
         f.write(content['file'])
 
-    return flask.make_response({'success': True}), 200
+    return flask.jsonify({'success': True}), 200
 
 
 @api.route('/domains', methods=['GET'])
@@ -188,7 +188,7 @@ def put_domain(name: str):
                 with io.open(os.path.join(config_path, _), 'w') as f:
                     f.write(content['file'])
 
-    return flask.make_response({'success': True}), 200
+    return flask.jsonify({'success': True}), 200
 
 
 @api.route('/domain/<name>/enable', methods=['POST'])
@@ -214,4 +214,4 @@ def enable_domain(name: str):
                 else:
                     os.rename(os.path.join(config_path, _), os.path.join(config_path, _ + '.disabled'))
 
-    return flask.make_response({'success': True}), 200
+    return flask.jsonify({'success': True}), 200
