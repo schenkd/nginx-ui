@@ -103,7 +103,7 @@ server {
         proxy_pass http://127.0.0.1:8080/;
     }
 
-    auth_basic "pnn-it.de nginx config";
+    auth_basic "nginxui secured";
     auth_basic_user_file /etc/apache2/.htpasswd;
 
     # [...] ommited ssl configuration
