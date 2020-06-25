@@ -1,10 +1,9 @@
-{
+server {
     listen          80;
-    server_name     {{ name }},
-    access_log      logs/{{ name }}.access.log main;
+    server_name     {{ name }};
+    access_log      /tmp/{{ name }}.access.log main;
 
     location / {
-        proxy_pass      http://127.0.0.1:8080;
+        proxy_pass  http://127.0.0.1:8080;
     }
-
 }
