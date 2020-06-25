@@ -93,7 +93,7 @@ Here is how this can be done when using nginx.
 ### Configure nginx
 
 The following example adds basic auth to our nginxui app running in a docker container with a mapped port 8080.
-In this case, it will be accessible via subdomain.mydomain.com
+In this case, it will be accessible via nginx.mydomain.com
 
 ```none
 server {
