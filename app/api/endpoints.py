@@ -38,7 +38,6 @@ def post_config(name: str):
     """
     content = flask.request.get_json()
     nginx_path = flask.current_app.config['NGINX_PATH']
-    print(nginx_path)
 
     if not os.path.exists(nginx_path):
         return flask.jsonify({'success': False, 'error_msg': 'Config dir is not found, edit config file or create config dir for nginx'}), 500
