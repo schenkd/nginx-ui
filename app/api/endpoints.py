@@ -38,6 +38,10 @@ def post_config(name: str):
     """
     content = flask.request.get_json()
     nginx_path = flask.current_app.config['NGINX_PATH']
+    print(nginx_path)
+
+    if not os.path.exists(nginx_path):
+        return flask.jsonify({'success': False, 'error_msg': 'Config dir is not found, edit config file or create config dir for nginx'}), 500
 
     with io.open(os.path.join(nginx_path, name), 'w') as f:
         f.write(content['file'])
@@ -56,6 +60,10 @@ def get_domains():
     config_path = flask.current_app.config['CONFIG_PATH']
     sites_available = []
     sites_enabled = []
+
+    if not os.path.exists(config_path):
+        return flask.render_template('domains.html', error_msg='Config dir is not found, edit config file or create config dir for nginx'), 500
+
 
     for _ in os.listdir(config_path):
 
@@ -127,6 +135,8 @@ def post_domain(name: str):
     :return: Returns a status about the success or failure of the action.
     """
     config_path = flask.current_app.config['CONFIG_PATH']
+    if not os.path.exists(config_path):
+        return flask.jsonify({'success': False, 'error_msg': 'Config dir is not found, edit config file or create config dir for nginx'}), 500
     new_domain = flask.render_template('new_domain.j2', name=name)
     name = name + '.conf.disabled'
 

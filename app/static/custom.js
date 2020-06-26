@@ -116,7 +116,7 @@ function fetch_html(url) {
 }
 
 function update_config(name) {
-    var _file = $('#file-content').val();
+    var code = editor.getValue();
     $('#dimmer').addClass('active');
 
     $.ajax({
@@ -125,7 +125,7 @@ function update_config(name) {
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         data: JSON.stringify({
-            file: _file
+            file: code
         }),
         statusCode: {
             200: function() {

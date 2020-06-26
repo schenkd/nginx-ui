@@ -24,10 +24,22 @@
                 <div class="ui inverted dimmer" id="dimmer">
                     <div class="ui huge loader"></div>
                 </div>
-                <textarea class="code" rows="25" id="file-content" autofocus>{{ file }}</textarea>
+                <div class="parent-editor">
+                    <div id="editor">{{ file }}</div>
+                </div>
             </div>
 
         </div>
 
     </div>
 </div>
+<script>
+    //editor init
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/nginx");
+    editor.setOptions({
+        autoScrollEditorIntoView: true,
+        copyWithEmptySelection: true,
+    });
+</script>
