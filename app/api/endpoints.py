@@ -39,7 +39,12 @@ def post_config(name: str):
     content = flask.request.get_json()
     nginx_path = flask.current_app.config['NGINX_PATH']
 
-    with io.open(os.path.join(nginx_path, name), 'w') as f:
+    config_file = os.path.join(nginx_path, name)
+
+    if not os.path.commonprefix(os.path.realpath(config_file), nginx_path):
+        return flask.make_response({'success': False}), 200
+
+    with io.open(config_file, 'w') as f:
         f.write(content['file'])
 
     return flask.make_response({'success': True}), 200
@@ -57,6 +62,9 @@ def get_domains():
     sites_available = []
     sites_enabled = []
 
+    if not os.path.exists(config_path):
+        errorMessage = 'The config folder "{}" does not exists.'.format(config_path)
+        return flask.render_template('domains.html', errorMessage=errorMessage, sites_available=(), sites_enabled=()), 200
     for _ in os.listdir(config_path):
 
         if os.path.isfile(os.path.join(config_path, _)):
