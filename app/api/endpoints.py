@@ -5,6 +5,31 @@ import flask
 
 from app.api import api
 
+def render_error(msg, error_header="An error occured!", statusCode=500):
+    return flask.render_template('error.html', error_header=error_header, error_message=msg), statusCode
+
+def get_valid_subpath(f: str, d: str):
+    """
+    Returns the absolute path of wanted file or directory, but only if it is contained in the given directory.
+
+    :param f: File name or directory to retireve the path for.
+    :type f: str
+
+    :param d: Directory, the file should be in.
+    :type d: str
+
+
+    :return: The valid path to access the file or None.
+    :rtype: str
+    """
+    file_path = os.path.realpath(f)
+    common_path = os.path.commonpath((file_path, d))
+
+    # a valid sub path must contain the whole parent directory in its own path
+    if common_path == d:
+        return file_path
+
+    return None
 
 @api.route('/config/<name>',  methods=['GET'])
 def get_config(name: str):
@@ -19,7 +44,11 @@ def get_config(name: str):
     """
     nginx_path = flask.current_app.config['NGINX_PATH']
 
-    with io.open(os.path.join(nginx_path, name), 'r') as f:
+    path = get_valid_subpath(os.path.join(nginx_path, name), nginx_path)
+    if path == None:
+        return render_error(f'Could not read file "{path}".')
+
+    with io.open(path, 'r') as f:
         _file = f.read()
 
     return flask.render_template('config.html', name=name, file=_file), 200
@@ -39,7 +68,13 @@ def post_config(name: str):
     content = flask.request.get_json()
     nginx_path = flask.current_app.config['NGINX_PATH']
 
-    with io.open(os.path.join(nginx_path, name), 'w') as f:
+    config_file = os.path.join(nginx_path, name)
+
+    path = get_valid_subpath(config_file, nginx_path)
+    if path == None:
+        return flask.make_response({'success': False}), 500
+
+    with io.open(config_file, 'w') as f:
         f.write(content['file'])
 
     return flask.make_response({'success': True}), 200
@@ -57,6 +92,9 @@ def get_domains():
     sites_available = []
     sites_enabled = []
 
+    if not os.path.exists(config_path):
+        error_message = f'The config folder "{config_path}" does not exists.'
+        return render_error(error_message)
     for _ in os.listdir(config_path):
 
         if os.path.isfile(os.path.join(config_path, _)):
@@ -130,8 +168,12 @@ def post_domain(name: str):
     new_domain = flask.render_template('new_domain.j2', name=name)
     name = name + '.conf.disabled'
 
+    path = get_valid_subpath(os.path.join(config_path, name), config_path)
+    if path == None:
+        return flask.jsonify({'success': False, 'error_msg': 'invalid domain path'}), 500
+
     try:
-        with io.open(os.path.join(config_path, name), 'w') as f:
+        with io.open(path, 'w') as f:
             f.write(new_domain)
 
         response = flask.jsonify({'success': True}), 201
