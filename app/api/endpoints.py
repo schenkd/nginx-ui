@@ -5,6 +5,30 @@ import flask
 
 from app.api import api
 
+def renderError(msg, error_header="An error occured!", statusCode=500):
+    return flask.render_template('error.html', error_header=error_header, error_message=msg), statusCode
+
+def getValidPath(f: str, d: str):
+    """
+    Returns the absolute path of wanted file or directory, but only if it is contained in the given directory.
+
+    :param f: File name to retireve the path for.
+    :type f: str
+
+    :param d: Directory, the file should be in.
+    :type d: str
+
+
+    :return: The valid path to access the file or None.
+    :rtype: str
+    """
+    file_path = os.path.realpath(f)
+    common_path = os.path.commonpath((file_path, d))
+
+    if common_path == d:
+        return file_path
+
+    return None
 
 @api.route('/config/<name>',  methods=['GET'])
 def get_config(name: str):
@@ -63,8 +87,8 @@ def get_domains():
     sites_enabled = []
 
     if not os.path.exists(config_path):
-        errorMessage = 'The config folder "{}" does not exists.'.format(config_path)
-        return flask.render_template('domains.html', errorMessage=errorMessage, sites_available=(), sites_enabled=()), 200
+        error_message = f'The config folder "{config_path}" does not exists.'
+        return renderError(error_message)
     for _ in os.listdir(config_path):
 
         if os.path.isfile(os.path.join(config_path, _)):
