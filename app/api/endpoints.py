@@ -5,10 +5,10 @@ import flask
 
 from app.api import api
 
-def renderError(msg, error_header="An error occured!", statusCode=500):
+def render_error(msg, error_header="An error occured!", statusCode=500):
     return flask.render_template('error.html', error_header=error_header, error_message=msg), statusCode
 
-def getValidSubpath(f: str, d: str):
+def get_valid_subpath(f: str, d: str):
     """
     Returns the absolute path of wanted file or directory, but only if it is contained in the given directory.
 
@@ -44,9 +44,9 @@ def get_config(name: str):
     """
     nginx_path = flask.current_app.config['NGINX_PATH']
 
-    path = getValidSubpath(os.path.join(nginx_path, name), nginx_path)
+    path = get_valid_subpath(os.path.join(nginx_path, name), nginx_path)
     if path == None:
-        return renderError(f'Could not read file "{path}".')
+        return render_error(f'Could not read file "{path}".')
 
     with io.open(path, 'r') as f:
         _file = f.read()
@@ -70,7 +70,7 @@ def post_config(name: str):
 
     config_file = os.path.join(nginx_path, name)
 
-    path = getValidSubpath(config_file, nginx_path)
+    path = get_valid_subpath(config_file, nginx_path)
     if path == None:
         return flask.make_response({'success': False}), 500
 
@@ -94,7 +94,7 @@ def get_domains():
 
     if not os.path.exists(config_path):
         error_message = f'The config folder "{config_path}" does not exists.'
-        return renderError(error_message)
+        return render_error(error_message)
     for _ in os.listdir(config_path):
 
         if os.path.isfile(os.path.join(config_path, _)):
@@ -168,7 +168,7 @@ def post_domain(name: str):
     new_domain = flask.render_template('new_domain.j2', name=name)
     name = name + '.conf.disabled'
 
-    path = getValidSubpath(os.path.join(config_path, name), config_path)
+    path = get_valid_subpath(os.path.join(config_path, name), config_path)
     if path == None:
         return flask.jsonify({'success': False, 'error_msg': 'invalid domain path'}), 500
 
