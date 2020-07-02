@@ -8,11 +8,11 @@ from app.api import api
 def renderError(msg, error_header="An error occured!", statusCode=500):
     return flask.render_template('error.html', error_header=error_header, error_message=msg), statusCode
 
-def getValidPath(f: str, d: str):
+def getValidSubpath(f: str, d: str):
     """
     Returns the absolute path of wanted file or directory, but only if it is contained in the given directory.
 
-    :param f: File name to retireve the path for.
+    :param f: File name or directory to retireve the path for.
     :type f: str
 
     :param d: Directory, the file should be in.
@@ -25,6 +25,7 @@ def getValidPath(f: str, d: str):
     file_path = os.path.realpath(f)
     common_path = os.path.commonpath((file_path, d))
 
+    # a valid sub path must contain the whole parent directory in its own path
     if common_path == d:
         return file_path
 
@@ -43,7 +44,11 @@ def get_config(name: str):
     """
     nginx_path = flask.current_app.config['NGINX_PATH']
 
-    with io.open(os.path.join(nginx_path, name), 'r') as f:
+    path = getValidSubpath(os.path.join(nginx_path, name), nginx_path)
+    if path == None:
+        return renderError(f'Could not read file "{path}".')
+
+    with io.open(path, 'r') as f:
         _file = f.read()
 
     return flask.render_template('config.html', name=name, file=_file), 200
@@ -65,8 +70,9 @@ def post_config(name: str):
 
     config_file = os.path.join(nginx_path, name)
 
-    if not os.path.commonprefix(os.path.realpath(config_file), nginx_path):
-        return flask.make_response({'success': False}), 200
+    path = getValidSubpath(config_file, nginx_path)
+    if path == None:
+        return flask.make_response({'success': False}), 500
 
     with io.open(config_file, 'w') as f:
         f.write(content['file'])
@@ -162,8 +168,12 @@ def post_domain(name: str):
     new_domain = flask.render_template('new_domain.j2', name=name)
     name = name + '.conf.disabled'
 
+    path = getValidSubpath(os.path.join(config_path, name), config_path)
+    if path == None:
+        return flask.jsonify({'success': False, 'error_msg': 'invalid domain path'}), 500
+
     try:
-        with io.open(os.path.join(config_path, name), 'w') as f:
+        with io.open(path, 'w') as f:
             f.write(new_domain)
 
         response = flask.jsonify({'success': True}), 201
