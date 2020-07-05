@@ -51,7 +51,7 @@ function enable_domain(name, enable) {
 }
 
 function update_domain(name) {
-    var _file = $('#file-content').val();
+    var code = editor.getValue();
     $('#dimmer').addClass('active');
 
     $.ajax({
@@ -60,7 +60,7 @@ function update_domain(name) {
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         data: JSON.stringify({
-            file: _file
+            file: code
         }),
         statusCode: {
             200: function() { setTimeout(function(){ fetch_domain(name) }, 400) }
