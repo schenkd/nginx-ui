@@ -85,9 +85,9 @@ Here is how this can be done when using nginx.
 ### Configure the auth file
 
 1. Verify that `apache2-utils` (Debian, Ubuntu) or `httpd-tools` (RHEL/CentOS/Oracle Linux) is installed
-2. Run the htpasswd utility to create a new user and set a passwort.
+2. Run the htpasswd utility to create a new user and set a password.
     - Make sure, that the directory exists
-    - Remove the `-c` flag, if you have created a user before, since it creates the inital user/passwort file
+    - Remove the `-c` flag, if you have created a user before, since it creates the inital user/password file
     - `sudo htpasswd -c /etc/apache2/.htpasswd user1`
 
 ### Configure nginx
