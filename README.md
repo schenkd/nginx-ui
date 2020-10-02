@@ -15,6 +15,7 @@ Table of Contents
   - [Authentication](#authentication)
     - [Configure the auth file](#configure-the-auth-file)
     - [Configure nginx](#configure-nginx)
+    - [Configure .conf file folder](#configure-conf-file-folder)
 
 ## Introduction
 
@@ -114,3 +115,19 @@ server {
 2. Run `nginx -t` to make sure, that your config is valid
 3. Run `systemctl restart nginx` (or equivalent) to restart your nginx and apply the new settings
 4. Your nginx ui is now accessible at nginx.mydomain.com and will correctly prompt for basic auth
+
+### Configure .conf file folder
+
+By default Nginx UI looks for .conf files in `/etc/nginx/conf.d`, but this can be changed by setting the CONFIG_PATH variable in Docker.
+Using `docker-compose.yml` will read the value from the enviroment. If no value is set, the fallback will be the default value.
+
+```bash
+docker run -d --restart=always --name nginxui -v /etc/nginx:/etc/nginx -p 8080:8080 -e CONFIG_PATH=/etc/nginx/conf.d schenkd/nginx-ui:latest
+```
+
+```bash
+export CONFIG_PATH=/etc/nginx/conf.d
+docker-compose up
+```
+
+
