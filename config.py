@@ -8,8 +8,6 @@ class Config(object):
     CONFIG_PATH = os.getenv(
         'CONFIG_PATH', os.path.join(NGINX_PATH, 'conf.d'))
 
-    print(CONFIG_PATH)
-
     @staticmethod
     def init_app(app):
         pass
