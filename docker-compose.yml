@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   nginx-ui:
     container_name: nginx-ui
@@ -8,6 +8,8 @@ services:
       - 8080:8080
     volumes:
       - nginx:/etc/nginx
+    environment:
+      - CONFIG_PATH
 
   nginx:
     container_name: nginx
