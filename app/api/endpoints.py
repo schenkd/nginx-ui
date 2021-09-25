@@ -198,6 +198,9 @@ def put_domain(name: str):
                 with io.open(os.path.join(config_path, _), "w") as f:
                     f.write(content["file"])
 
+    if check_nginx_configuration():
+        reload_nginx()
+
     return flask.make_response({"success": True}), 200
 
 
