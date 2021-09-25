@@ -18,7 +18,7 @@ def check_nginx():
             out = process.communicate()
             flag = True
             for output in out:
-                output_string = output.decode("utf-8")
+                output_string = output.decode("utf-8").strip()
                 if len(output_string):
                     if "which: no nginx" in output_string:
                         log.warn(f"Found this output for `{reload_nginx_cmd}` => {out}")
