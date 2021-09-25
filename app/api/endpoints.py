@@ -169,6 +169,9 @@ def delete_domain(name: str):
                 removed = not os.path.exists(os.path.join(config_path, _))
                 break
 
+    if check_nginx_configuration():
+        reload_nginx()
+
     if removed:
         return flask.jsonify({"success": True}), 200
     else:
@@ -221,12 +224,12 @@ def enable_domain(name: str):
                         os.path.join(config_path, _),
                         os.path.join(config_path, new_filename),
                     )
-                    if check_nginx_configuration():
-                        reload_nginx()
                 else:
                     os.rename(
                         os.path.join(config_path, _),
                         os.path.join(config_path, _ + ".disabled"),
                     )
+    if check_nginx_configuration():
+        reload_nginx()
 
     return flask.make_response({"success": True}), 200
