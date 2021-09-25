@@ -66,7 +66,7 @@ def check_nginx_configuration():
                 ):
                     return True
 
-            log.warn(f"Found this output for `nginx -t` {out}")
+            log.warn(f"Found this output for `nginx -t` => {out}")
     except Exception as e:
         log.error(f"Failed to check nginx syntax, {e}")
 
