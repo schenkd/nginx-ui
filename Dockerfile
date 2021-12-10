@@ -11,5 +11,6 @@ ADD . /webapp
 ENV HOME /webapp
 WORKDIR /webapp
 
-ENTRYPOINT ["uwsgi"]
-CMD ["--http", "0.0.0.0:8080", "--wsgi-file", "wsgi.py", "--callable", "app", "--processes", "1", "--threads", "8"]
+#ENTRYPOINT ["uwsgi"]
+CMD ["/bin/sh", "-c", "echo Feel free to ctrl-c! Container will stick around. && while true ; do sleep 3600; done"]
+#CMD ["--http", "0.0.0.0:8080", "--wsgi-file", "wsgi.py", "--callable", "app", "--processes", "1", "--threads", "8"]
