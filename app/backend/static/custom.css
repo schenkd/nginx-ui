@@ -28,3 +28,13 @@ textarea {
     display: none !important;
   }
 }
+
+.control-label {
+    width: 120px;
+    text-align: left;
+}
+.controls {
+    margin-left: 150px;
+    min-height: 30px;
+    line-height: 30px;
+}

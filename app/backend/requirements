@@ -5,5 +5,7 @@ itsdangerous==1.1.0
 Jinja2==2.11.2
 MarkupSafe==1.1.1
 pytz==2020.1
-uWSGI==2.0.18
 Werkzeug==1.0.1
+python-consul2
+flask-cors
+uwsgi

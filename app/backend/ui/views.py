@@ -1,4 +1,4 @@
-from app.ui import ui
+from app.backend.ui import ui
 import flask
 import os
 

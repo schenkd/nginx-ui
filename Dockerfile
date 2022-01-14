@@ -1,16 +1,33 @@
-FROM python:3.7-alpine
+FROM ubuntu:18.04 AS base
 
-ADD requirements.txt .
+# apt installs
+# For backend
+RUN apt-get update && apt-get install -y python3.7 python3-pip build-essential git curl sudo net-tools nginx vim
 
-RUN apk add python3-dev build-base linux-headers pcre-dev && pip install --no-cache-dir -r requirements.txt
+# For frontend
+WORKDIR /root
+ENV NVM_DIR /root/.nvm
+ARG version_nvm=0.37.2
+ARG version_node=17.3.1
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v$version_nvm/install.sh | bash \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install $version_node \
+    && nvm use $version_node
+ENV PATH $NVM_DIR/versions/node/v$version_node/bin:$PATH
 
-# adding application files
-ADD . /webapp
+FROM base AS nginx-ui
+RUN mkdir /root/nginx-ui
+ADD . /root/nginx-ui
+# For backend
+RUN pip3 install -r /root/nginx-ui/app/backend/requirements
 
-# configure path /webapp to HOME-dir
-ENV HOME /webapp
-WORKDIR /webapp
+# For frontend
+WORKDIR /root/nginx-ui/app/frontend
+RUN npm install
 
-#ENTRYPOINT ["uwsgi"]
-CMD ["/bin/sh", "-c", "echo Feel free to ctrl-c! Container will stick around. && while true ; do sleep 3600; done"]
-#CMD ["--http", "0.0.0.0:8080", "--wsgi-file", "wsgi.py", "--callable", "app", "--processes", "1", "--threads", "8"]
+# For nginx
+ADD wish-nginx-ui.conf /etc/nginx/conf.d/
+RUN service nginx reload
+
+WORKDIR /root/nginx-ui
+CMD ["/bin/bash", "-c", "echo Feel free to ctrl-c! Container will stick around. && while true ; do sleep 3600; done"]
