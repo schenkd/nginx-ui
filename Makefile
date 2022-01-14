@@ -1,5 +1,8 @@
 backend:
-	docker exec -it nginx-ui uwsgi --http 0.0.0.0:8080 --wsgi-file ./app/backend/wsgi.py --callable app --threads 8
+	docker exec -it nginx-ui uwsgi --http 0.0.0.0:8000 --wsgi-file /home/app/nginx-ui/app/backend/wsgi.py --callable app --threads 8
 
-frontend:
-	docker exec -it
+frontend-install:
+	docker exec -w /home/app/nginx-ui/app/frontend -it nginx-ui npm install
+
+frontend-dev:
+	docker exec -w /home/app/nginx-ui/app/frontend -it nginx-ui npm run serve

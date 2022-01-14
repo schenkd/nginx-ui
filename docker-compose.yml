@@ -7,11 +7,15 @@ services:
     container_name: nginx-ui
     build: .
     image: nginx-ui:latest
+    user: ${BUILDUID:-1000}:${BUILDGID:-1000}
+    environment:
+      - "DOCKER_USER=${USER:-app}"
+    hostname: "$USER"
     ports:
       - 80:80
       - 443:443
     volumes:
-      - ./app:/root/nginx-ui/app
+      - ./app:/home/app/nginx-ui/app
       - nginx:/etc/nginx
     networks:
       micro-net:
