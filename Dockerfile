@@ -69,5 +69,4 @@ ENV PYTHONPATH /home/app/nginx-ui
 ADD wish-nginx-ui.conf /etc/nginx/conf.d/
 RUN sudo service nginx reload
 
-#WORKDIR /root/nginx-ui
 CMD ["/bin/bash", "-c", "echo Feel free to ctrl-c! Container will stick around. && while true ; do sleep 3600; done"]

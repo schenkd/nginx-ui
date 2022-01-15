@@ -21,14 +21,12 @@
             :headers="headers"
             :items="items"
             :search="search"
+            items-per-page="-1"
         >
-          <template v-slot:item.endpoint="{item}">
-            <label>{{ item.endpoint }}
+          <template v-slot:item.instance_id="{item}">
+            <label>{{ item.instance_id }}
             </label>
-            <v-chip class="ma-2" v-if="item.tag.length !== 0">{{
-                item.tag
-              }}
-            </v-chip>
+            <v-chip class="ma-2" v-for="val in item.tags" :key="val" v-show="item.tags.length !== 0">{{ val }}</v-chip>
           </template>
           <template v-slot:item.action="{item}">
             <v-btn
@@ -55,13 +53,19 @@
                 <v-autocomplete
                     v-model="edit_info.endpoint"
                     :items="edit_info.all_endpoints"
-                    item-text="instance_id"
-                    item-value="endpoint"
+                    key="endpoint"
+                    item-text="endpoint"
                     return-object
                     label="Please choose enpoint"
                     outlined
                     dense
-                ></v-autocomplete>
+                >
+                  <template v-slot:item="{item}">
+                    <label>{{ item.instance_id + "(" + item.endpoint + ")" }} </label>
+                    <v-chip class="ma-2" v-for="val in item.tags" :key="val" v-show="item.tags.length !== 0">{{ val }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
               </v-col>
             </v-row>
 
@@ -75,7 +79,6 @@
               >Cancel
               </v-btn>
               <v-btn
-
                   class="ma-1"
                   color="primary"
                   plain
@@ -106,70 +109,12 @@ export default {
     group: null,
     headers: [
       {text: "ServiceName", value: "service_name", sortable: false},
-      {text: "Endpoint", value: "endpoint", sortable: false},
+      {text: "Endpoint", value: "instance_id", sortable: false},
       {text: "Action", value: "action", sortable: false},
     ],
 
     search: '',
-    items: [
-      {
-        service_name: 'wishpost',
-        endpoint: '',
-        tag: '',
-        all_endpoints: [
-          {
-            instance_id: 'conan-wishpost',
-            endpoint: '1',
-          },
-          {
-            instance_id: 'dan-wishpost',
-            endpoint: '2',
-          },
-          {
-            instance_id: 'frank-wishpost',
-            endpoint: '3',
-          },
-        ]
-      },
-      {
-        service_name: 'wishwms',
-        endpoint: 'www.wishwms.com',
-        tag: 'eks-prod',
-        all_endpoints: [
-          {
-            instance_id: 'conan-wishpost',
-            endpoint: '1',
-          },
-          {
-            instance_id: 'dan-wishpost',
-            endpoint: '2',
-          },
-          {
-            instance_id: 'frank-wishpost',
-            endpoint: '3',
-          },
-        ]
-      },
-      {
-        service_name: 'wishrms',
-        endpoint: 'www.wishrms.com',
-        tag: 'eks-dev',
-        all_endpoints: [
-          {
-            instance_id: 'conan-wishpost',
-            endpoint: '1',
-          },
-          {
-            instance_id: 'dan-wishpost',
-            endpoint: '2',
-          },
-          {
-            instance_id: 'frank-wishpost',
-            endpoint: '3',
-          },
-        ]
-      }
-    ],
+    items: [],
 
     edit_service_switch: false,
     edit_info: {
@@ -179,29 +124,59 @@ export default {
     }
 
   }),
+
+  mounted() {
+    this.getService()
+  },
+
+
   methods: {
-    resetEditInfo(service_name, all_endpoints) {
+
+    getService() {
+      const path = `http://wish-nginx-ui.com/api/services`;
+      axios.get(path).then(response => {
+        this.items = response.data.data;
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+
+    /******************************************************/
+    // ALL API
+    getAllEndpoints(service_name) {
+      const path = `http://wish-nginx-ui.com/api/services/` + service_name;
+      axios.get(path).then(response => {
+        console.log(response.data.endpoints)
+        this.edit_info.all_endpoints = response.data.endpoints
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+
+    /******************************************************/
+
+
+    resetEditInfo(service_name) {
       this.edit_info.service_name = service_name;
       this.edit_info.endpoint = '';
-      this.edit_info.all_endpoints = all_endpoints;
+      this.getAllEndpoints(service_name);
     },
 
     edit(item) {
-      this.resetEditInfo(item.service_name, item.all_endpoints);
+      this.resetEditInfo(item.service_name);
       this.edit_service_switch = true;
     },
 
     saveEdit() {
-      const path = 'http://localhost:8080/api/service';
+      const path = 'http://wish-nginx-ui.com/api/services/' + this.edit_info.service_name;
       let params = {};
-      params.service_name = this.edit_info.service_name;
       params.endpoint = this.edit_info.endpoint;
-      axios.post(path, params).then(response => {
+      axios.put(path, params).then(response => {
         console.log(response)
       }).catch(error => {
         console.log(error)
       })
-
+      this.getService()
       this.edit_service_switch = false;
     },
     cancelEdit() {

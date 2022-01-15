@@ -4,12 +4,16 @@ import consul
 
 @dataclass
 class ServiceInstance(object):
-    service_id: str
+    service_name: str
     host: str
     port: int
-    secure: bool = False
     metadata: dict = None
     instance_id: str = None
+    tags: list = None
+
+    @property
+    def endpoint(self):
+        return f'http://{self.host}:{self.port}'
 
 
 class ConsulServiceRegistry(object):
@@ -27,7 +31,7 @@ class ConsulServiceRegistry(object):
         uri = f'{schema}://{service_instance.host}:{service_instance.port}/api/health'
         print(uri)
         # check = consul.Check.http(uri, "1s", "3s", "10s")
-        self._consul.agent.service.register(service_instance.service_id,
+        self._consul.agent.service.register(service_instance.service_name,
                                             service_id=service_instance.instance_id,
                                             address=service_instance.host,
                                             port=service_instance.port,

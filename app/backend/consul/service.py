@@ -23,8 +23,8 @@ class ConsulServiceDiscovery(object):
                 oi.get("ServiceName"),
                 oi.get("ServiceAddress"),
                 oi.get("ServicePort"),
-                oi.get("ServiceTags"),
                 oi.get("ServiceMeta"),
                 oi.get("ServiceID"),
+                oi.get("ServiceTags")
             ))
         return result
