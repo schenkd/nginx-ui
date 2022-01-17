@@ -21,7 +21,7 @@
             :headers="headers"
             :items="items"
             :search="search"
-            items-per-page="-1"
+            :items-per-page=-1
         >
           <template v-slot:item.instance_id="{item}">
             <label>{{ item.instance_id }}

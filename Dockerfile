@@ -3,6 +3,7 @@ FROM ubuntu:18.04 AS base
 # apt installs
 # For backend
 RUN apt-get update && apt-get install -y python3.7 python3-pip python3.7-dev build-essential git curl sudo net-tools nginx vim
+RUN apt-get install -y dnsutils iputils-ping
 ARG version_virtualenv=20.4.0
 RUN pip3 install virtualenv==$version_virtualenv
 
@@ -66,7 +67,8 @@ ENV PYTHONPATH /home/app/nginx-ui
 #RUN npm install
 
 # For nginx
-ADD wish-nginx-ui.conf /etc/nginx/conf.d/
-RUN sudo service nginx reload
+#USER root
+#ADD wish-nginx-ui.conf /etc/nginx/conf.d/
+#RUN sudo service nginx start
 
 CMD ["/bin/bash", "-c", "echo Feel free to ctrl-c! Container will stick around. && while true ; do sleep 3600; done"]
