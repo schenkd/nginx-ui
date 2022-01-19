@@ -10,8 +10,6 @@ def create_config(name, proxy_pass, disabled=True):
     new_domain = flask.render_template('new_domain.j2', name=name,
                                        proxy=proxy_pass)
     name = name + '.conf'
-    if disabled:
-        name = name + '.disabled'
     try:
         with io.open(os.path.join(config_path, name), 'w') as f:
             f.write(new_domain)

@@ -19,5 +19,10 @@ services:
       - nginx:/etc/nginx
     networks:
       micro-net:
+        ipv4_address: 192.168.100.2
+    command:
+      - /bin/bash
+      - -c
+      - sudo service nginx start && sudo python2 /home/app/marlon-tools/tools/dnsproxy/dnsproxy.py -s 127.0.0.11 -H 0.0.0.0 --hosts-file=/home/app/nginx-ui/app/backend/config/hosts && while true ; do sleep 3600; done
 volumes:
   nginx:

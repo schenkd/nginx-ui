@@ -4,17 +4,20 @@ from flask import request
 from app.backend.consul.register import ConsulServiceRegistry, ServiceInstance
 from app.backend.consul.service import ConsulServiceDiscovery
 from app.backend.consul.utils import get_instance_id, get_ingress
-from app.backend.utils.nginx import create_config, disable_config, reload
+from app.backend.utils.nginx import create_config, reload
 from app.backend.api import api
+from app.backend.utils.hosts import add_host
+from app.backend.utils.const import HOST
+
 
 @api.route('/service/register', methods=['POST'])
 def register_service():
     # 1. 将服务注册到 consul
     service_name = request.form.get('service_name')
-    host = request.form.get('host')
+    host = sc.services.external_ip
     port = int(request.form.get('port'))
     user_name = request.form.get('user_name')
-    print(service_name, host, port, user_name, type(service_name))
+    # print(service_name, host, port, user_name, type(service_name))
     instance = ServiceInstance(service_name, host, 80,
                                instance_id=get_instance_id(service_name,
                                                            user_name))
@@ -26,9 +29,10 @@ def register_service():
     result, msg = create_config(ingress_name, f'http://{service_name}:{port}',
                                 disabled=False)
 
+    # 3. 把 service 的 port 记起来
+    sc.save_local_service(service_name, {"port": port})
     # 3. reload
     reload()
-
     if result:
         response = flask.jsonify({'success': True}), 201
     else:
@@ -41,16 +45,8 @@ def deregister_service():
     service_name = request.form.get("service_name")
     user_name = request.form.get("user_name")
     instance_id = get_instance_id(service_name, user_name)
-    print(instance_id)
     registry = ConsulServiceRegistry()
     registry.deregister(instance_id)
-
-    # 2. 把 nginx 代理 close 掉
-    ingress_name = get_ingress(service_name)
-    disable_config(ingress_name)
-
-    # 3. reload
-    reload()
 
     return flask.make_response({'success': True}), 200
 
@@ -62,7 +58,6 @@ def get_service(name: str):
 
     response = []
     for i in instances:
-        print(i)
         response.append(
             {
                 'instance_id': i.instance_id,
@@ -75,17 +70,29 @@ def get_service(name: str):
 
     return flask.make_response({'success': True, 'endpoints': response})
 
+
 @api.route('/services/<name>', methods=['PUT'])
 def put_services(name: str):
     request = flask.request.get_json()
-    #1. save in sc
+    # 1. save in sc
     sc.save_service(name, request['endpoint'])
-    #2. update config
+    # 2. update config
     ingress_name = get_ingress(name)
-    create_config(ingress_name, request['endpoint']['endpoint'], False)
-    #3. reload nginx
-    print(reload())
+
+    if f'http://{sc.services.external_ip}:{sc.services.local_service_config[name]["port"]}' == \
+            request['endpoint']['endpoint']:
+        create_config(ingress_name,
+                      f'http://{name}:{sc.services.local_service_config[name]["port"]}',
+                      disabled=False)
+    else:
+        create_config(ingress_name, request['endpoint']['endpoint'])
+
+    # 3. write hosts in /etc/hosts
+    add_host(HOST, ingress_name)
+    # 3. reload nginx
+    reload()
     return flask.make_response({'success': True})
+
 
 @api.route('/services', methods=['GET'])
 def get_services():
@@ -99,14 +106,13 @@ def get_services():
         service = {
             'service_name': name
         }
-        if name in sc.services:
-            service['instance_id'] = sc.services[name]['instance_id']
-            service['endpoint'] = sc.services[name]['endpoint']
-            service['tags'] = sc.services[name]['tags']
+        if name in sc.services.service_config:
+            service['instance_id'] = sc.services.service_config[name]['instance_id']
+            service['endpoint'] = sc.services.service_config[name]['endpoint']
+            service['tags'] = sc.services.service_config[name]['tags']
         else:
             service['instance_id'] = ''
             service['endpoint'] = ''
             service['tags'] = []
         response.append(service)
     return flask.make_response({'success': True, 'data': response}), 200
-

@@ -4,6 +4,7 @@ FROM ubuntu:18.04 AS base
 # For backend
 RUN apt-get update && apt-get install -y python3.7 python3-pip python3.7-dev build-essential git curl sudo net-tools nginx vim
 RUN apt-get install -y dnsutils iputils-ping
+RUN apt-get install -y python
 ARG version_virtualenv=20.4.0
 RUN pip3 install virtualenv==$version_virtualenv
 
@@ -61,6 +62,10 @@ ENV PATH /home/app/virtualenv/bin:$PATH
 ENV VIRTUAL_ENV=/home/app/virtualenv
 ENV PYTHONIOENCODING=UTF-8
 ENV PYTHONPATH /home/app/nginx-ui
+
+
+WORKDIR /home/app
+RUN git clone https://github.com/Conan-shen/marlon-tools.git
 
 # For frontend
 #WORKDIR /root/nginx-ui/app/frontend

@@ -1,1 +1,7 @@
-{}
+{
+  "service_config": {
+  },
+  "local_service_config": {
+  },
+  "external_ip": ""
+}
