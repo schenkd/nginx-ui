@@ -236,6 +236,7 @@ dmypy.json
 .pyre/
 
 ### VisualStudioCode template
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
