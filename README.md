@@ -1,6 +1,6 @@
 # nginx ui
 
-![Docker Image CI](https://github.com/schenkd/nginx-ui/workflows/Docker%20Image%20CI/badge.svg)
+![Docker Image CI](https://github.com/FrancXPT/nginx-ui/workflows/Docker%20Image%20CI/badge.svg)
 
 ![Image of Nginx UI](https://i.ibb.co/XXcfsDp/Bildschirmfoto-2020-06-20-um-18-40-27.png)
 
@@ -41,12 +41,12 @@ delivered in a container.
 - `-p 8080:8080` map host port 8080 to docker container port 8080
 
 ```bash
-docker run -d --restart=always --name nginxui -v /etc/nginx:/etc/nginx -p 8080:8080 schenkd/nginx-ui:latest
+docker run -d --restart=always --name nginxui -v /etc/nginx:/etc/nginx -p 8080:8080 FrancXPT/nginx-ui:latest
 ```
 
 ### Docker
 
-Repository @ [DockerHub](https://hub.docker.com/r/schenkd/nginx-ui)
+Repository @ [DockerHub](https://hub.docker.com/r/FrancXPT/nginx-ui)
 
 Docker Compose excerpt
 
@@ -54,7 +54,7 @@ Docker Compose excerpt
 # Docker Compose excerpt
 services:
   nginx-ui:
-    image: schenkd/nginx-ui:latest
+    image: FrancXPT/nginx-ui:latest
     ports:
       - 8080:8080
     volumes:
