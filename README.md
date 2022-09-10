@@ -114,3 +114,8 @@ server {
 2. Run `nginx -t` to make sure, that your config is valid
 3. Run `systemctl restart nginx` (or equivalent) to restart your nginx and apply the new settings
 4. Your nginx ui is now accessible at nginx.mydomain.com and will correctly prompt for basic auth
+
+
+### Infrastructure model
+
+![Infrastructure model](.infragenie/infrastructure_model.png)
