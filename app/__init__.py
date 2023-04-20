@@ -3,7 +3,6 @@ from config import config
 from flask_moment import Moment
 
 from werkzeug.middleware.proxy_fix import ProxyFix
-import os
 
 moment = Moment()
 
