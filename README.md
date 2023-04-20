@@ -114,3 +114,60 @@ server {
 2. Run `nginx -t` to make sure, that your config is valid
 3. Run `systemctl restart nginx` (or equivalent) to restart your nginx and apply the new settings
 4. Your nginx ui is now accessible at nginx.mydomain.com and will correctly prompt for basic auth
+
+### Example NginX-UI + NginX (run in container) behind path '/some-location'
+
+docker-compose.yml
+```yaml
+version: '3'
+services:
+  nginx-ui:
+    container_name: nginx-ui
+    build: .
+    image: schenkd/nginx-ui:latest
+    # ports:
+    #   - 8080:8080
+    volumes:
+      - D:/_data/_docker/nginx:/etc/nginx
+    networks:
+      - my-custom-network
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - D:/_data/_docker/nginx:/etc/nginx
+    networks:
+      - my-custom-network
+networks:
+  my-custom-network:
+    name: my-custom-network
+    external: true
+```
+
+default.conf
+```none
+server {
+
+    listen 80;
+    listen [::]:80;
+    server_name  localhost;
+
+    # ...
+
+    location /nginx-ui/ {
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Need to pass this header for backend procesing route '/nginx-ui' + '/api'
+        proxy_set_header X-Forwarded-Prefix /nginx-ui;
+
+        # With docker custom network, we can use container name with port
+        # We cannot access port 8080 directly from outside host server
+        proxy_pass http://nginx-ui:8080/;
+    }
+
+}
+```

@@ -25,7 +25,7 @@ function add_domain() {
 
     $.ajax({
         type: 'POST',
-        url: '/api/domain/' + name,
+        url: 'api/domain/' + name,
         statusCode: {
             201: function() { fetch_domain(name) }
         }
@@ -37,7 +37,7 @@ function enable_domain(name, enable) {
 
     $.ajax({
         type: 'POST',
-        url: '/api/domain/' + name + '/enable',
+        url: 'api/domain/' + name + '/enable',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         data: JSON.stringify({
@@ -56,7 +56,7 @@ function update_domain(name) {
 
     $.ajax({
         type: 'PUT',
-        url: '/api/domain/' + name,
+        url: 'api/domain/' + name,
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         data: JSON.stringify({
@@ -88,7 +88,7 @@ function remove_domain(name) {
 
     $.ajax({
         type: 'DELETE',
-        url: '/api/domain/' + name,
+        url: 'api/domain/' + name,
         statusCode: {
             200: function() {
                 load_domains();
@@ -121,7 +121,7 @@ function update_config(name) {
 
     $.ajax({
         type: 'POST',
-        url: '/api/config/' + name,
+        url: 'api/config/' + name,
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         data: JSON.stringify({
