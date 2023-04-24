@@ -1,6 +1,9 @@
 <div class="column">
 
     <div class="ui cards" id="domain_cards">
+        {% if error_msg %}
+        <span><h3>Error:</h3> {{error_msg}}</span>
+        {% endif %}
         {% if sites_available %}
         {% for domain in sites_available %}
         <div class="card">
