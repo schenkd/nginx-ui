@@ -1,5 +1,5 @@
 click==7.1.2
-Flask==1.1.2
+Flask==2.3.2
 Flask-Moment==0.9.0
 itsdangerous==1.1.0
 Jinja2==2.11.3
