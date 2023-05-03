@@ -467,3 +467,5 @@ typings/
 # Linux trash folder which might appear on any partition or disk
 
 # .nfs files are created when an open file is removed but is still being accessed
+
+docker-compose.windows.yml
