@@ -128,7 +128,7 @@ services:
     # ports:
     #   - 8080:8080
     volumes:
-      - D:/_data/_docker/nginx:/etc/nginx
+      - ./nginx/etc-nginx:/etc/nginx
     networks:
       - my-custom-network
   nginx:
@@ -137,7 +137,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - D:/_data/_docker/nginx:/etc/nginx
+      - ./nginx/etc-nginx:/etc/nginx
     networks:
       - my-custom-network
 networks:
