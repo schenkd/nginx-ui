@@ -2,8 +2,36 @@ import datetime
 import io
 import os
 import flask
+import subprocess
 
+from pathlib import Path
 from app.api import api
+
+
+@api.route('/reload-nginx',  methods=['GET'])
+def get_reload_nginx():
+    """
+    Runs the command to reload the nginx configuration.
+
+    :return: Returns a status from terminal output.
+    :rtype: str
+    """
+    exec_cmd = 'nginx -s reload'
+    res = 'No NginX docker container provided'
+    code = 400
+
+    docker_sock = Path('/var/run/docker.sock')
+    if docker_sock.is_socket() and 'NGINX_CONTAINER_NAME' in os.environ:
+        exec_cmd = f'docker exec {os.environ.get("NGINX_CONTAINER_NAME")} {exec_cmd}'
+        proc = subprocess.Popen(exec_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = proc.communicate()
+        if err:
+            res = str(err.decode('utf-8'))
+        else:
+            res = str(out.decode('utf-8'))
+            code = 200
+
+    return flask.make_response({'script': exec_cmd, 'result': res}), code
 
 
 @api.route('/config/<name>',  methods=['GET'])

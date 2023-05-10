@@ -41,6 +41,11 @@
                 </a>
 
                 <div class="mobile hidden right item">
+                    {% if reload_nginx: %}
+                    <div class="ui action" style="padding-right: 0.5em;">
+                        <button class="ui green button" onclick="reload_nginx()" tabindex="0">Reload</button>
+                    </div>
+                    {% endif %}
                     <div class="ui action input">
                         <input type="text" placeholder="example.com" id="add_domain">
                         <button class="ui green button" onclick="add_domain()" tabindex="0">
