@@ -12,6 +12,21 @@ $(document).ready(function() {
 
 });
 
+function reload_nginx() {
+    $.ajax({
+        type: 'GET',
+        url: 'api/reload-nginx',
+        statusCode: {
+            200: function() {
+                alert('NginX reloaded successfully');
+            },
+            400: function() {
+                alert(`Failed to reload NginX`);
+            }
+        }
+    });
+}
+
 function load_domains() {
     $.when(fetch_html('api/domains')).then(function() {
         $('#domain').hide();

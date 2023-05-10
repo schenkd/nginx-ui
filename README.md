@@ -117,6 +117,10 @@ server {
 
 ### Example NginX-UI + NginX (run in container) behind path '/some-location'
 
+![Image of Nginx UI](https://i.ibb.co/59myNSf/nginx-ui.png)
+
+> If Nginx running as a container separatedly, '$ docker exec {nginx-container-name} nginx -s reload' button will be visible after docker socket and container name provided
+
 docker-compose.yml
 ```yaml
 version: '3'
@@ -129,6 +133,9 @@ services:
     #   - 8080:8080
     volumes:
       - ./nginx/etc-nginx:/etc/nginx
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      NGINX_CONTAINER_NAME: nginx
     networks:
       - my-custom-network
   nginx:
