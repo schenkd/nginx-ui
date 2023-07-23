@@ -6,4 +6,4 @@ Jinja2==2.11.3
 MarkupSafe==1.1.1
 pytz==2020.1
 uWSGI==2.0.18
-Werkzeug==1.0.1
+Werkzeug==2.2.3
